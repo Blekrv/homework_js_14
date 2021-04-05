@@ -3,7 +3,7 @@ let $gallery = document.querySelector(".gallery"),
   $list = document.querySelector(".list"),
   $imageList = document.querySelector(".image-list");
 const url =
-  "https://pixabay.com/api/?key=20933966-c5d73f550f2c4778aed1a5857&q=game&image_type=photo";
+  "https://pixabay.com/api/?key=20933966-c5d73f550f2c4778aed1a5857&q=girl&image_type=photo";
 
 let $leftBigArrow = document.createElement("SPAN"),
   $rightBigArrow = document.createElement("SPAN"),
@@ -57,7 +57,10 @@ function createList(images) {
   activeImage(0, $images);
 
   $leftBigArrow.addEventListener("click", () => {
-    activeImage(prev, $images);
+    imageListPosition = imageListPosition + img_width;
+    if (imageListPosition >= 0) {
+      imageListPosition = -(imageListWidth - img_width * 5);
+    }
   });
   $rightSmallArrow.addEventListener("click", () => {
     imageListPosition = imageListPosition - img_width;
@@ -66,7 +69,14 @@ function createList(images) {
     }
     $imageList.style.left = imageListPosition + "px";
   });
-  $leftSmallArrow.addEventListener("click", () => {});
+  $leftSmallArrow.addEventListener("click", () => {
+    imageListPosition = imageListPosition + img_width;
+    if (imageListPosition > 0) {
+      imageListPosition = -(imageListWidth - img_width * 5);
+    }
+    $imageList.style.left = imageListPosition + "px";
+  });
+
   for (let i = 0; i < $images.length; i++) {
     $images[i].addEventListener("click", () => {
       activeImage(i, $images);
