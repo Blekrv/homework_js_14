@@ -54,13 +54,36 @@ function createList(images) {
   imageListPosition = 0;
   imageListWidth = img_width * $images.length;
 
-  activeImage(0, $images);
+  $rightBigArrow.addEventListener("click", () => {
+    if (prev >= $images.length - 1) {
+      prev = -1;
+    }
+    activeImage(prev + 1, $images);
 
+    imageListPosition = imageListPosition - img_width;
+    if (imageListPosition == -imageListWidth) {
+      imageListPosition = 0;
+    }
+    console.log(imageListPosition);
+    if (imageListPosition > -imageListWidth + img_width * 4) {
+      $imageList.style.left = imageListPosition + "px";
+    }
+  });
   $leftBigArrow.addEventListener("click", () => {
+    // prev = 0;
+    console.log(prev)
+    if (prev <= 0) {
+      prev = $images.length - 1;
+    } else {
+      prev -= 1
+    }
+    console.log(prev)
+    activeImage(prev, $images);
     imageListPosition = imageListPosition + img_width;
-    if (imageListPosition >= 0) {
+    if (imageListPosition > 0) {
       imageListPosition = -(imageListWidth - img_width * 5);
     }
+    $imageList.style.left = imageListPosition + "px";
   });
   $rightSmallArrow.addEventListener("click", () => {
     imageListPosition = imageListPosition - img_width;
@@ -76,7 +99,7 @@ function createList(images) {
     }
     $imageList.style.left = imageListPosition + "px";
   });
-
+  activeImage(0, $images);
   for (let i = 0; i < $images.length; i++) {
     $images[i].addEventListener("click", () => {
       activeImage(i, $images);
@@ -84,11 +107,14 @@ function createList(images) {
   }
   function activeImage(index, list) {
     $slider.style.backgroundImage = list[index].style.backgroundImage;
+    
     list[index].classList.add("active");
     if (prev >= 0 && prev != index) {
       list[prev].classList.remove("active");
     }
+    console.log(prev);
     prev = index;
+    console.log(prev);
   }
 }
 
