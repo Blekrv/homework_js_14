@@ -31,7 +31,7 @@ function load() {
       console.log("Error");
     } else {
       let data = JSON.parse(GET_Server.response).hits;
-      console.log(data);
+      // console.log(data);
       createList(data);
     }
   };
@@ -39,51 +39,45 @@ function load() {
 function createList(images) {
   let prev = -1;
   for (image of images) {
-    console.log(image.webformatURL);
+    // console.log(image.webformatURL);
     const $LI = document.createElement("LI");
     $LI.style.backgroundImage = `url(${image.webformatURL})`;
     $imageList.appendChild($LI);
   }
   let $images = document.querySelectorAll(".image-list li"),
     img_width = $images[0].getBoundingClientRect().width;
-  $slider.style.backgroundImage = $images[0].style.backgroundImage;
-  $images[0].classList.add("active");
 
   $list.style.width = img_width * 5 + "px";
   $gallery.style.width = $list.style.width;
   imageListPosition = 0;
   imageListWidth = img_width * $images.length;
-
   $rightBigArrow.addEventListener("click", () => {
     if (prev >= $images.length - 1) {
       prev = -1;
     }
     activeImage(prev + 1, $images);
 
-    imageListPosition = imageListPosition - img_width;
-    if (imageListPosition == -imageListWidth) {
-      imageListPosition = 0;
-    }
-    console.log(imageListPosition);
+    imageListPosition = -(prev * img_width);
     if (imageListPosition > -imageListWidth + img_width * 4) {
       $imageList.style.left = imageListPosition + "px";
     }
   });
   $leftBigArrow.addEventListener("click", () => {
-    // prev = 0;
-    console.log(prev)
     if (prev <= 0) {
-      prev = $images.length - 1;
+      prev = 0;
+      activeImage( $images.length -1, $images);
+
     } else {
-      prev -= 1
+      activeImage(prev -1, $images)
     }
-    console.log(prev)
-    activeImage(prev, $images);
-    imageListPosition = imageListPosition + img_width;
-    if (imageListPosition > 0) {
-      imageListPosition = -(imageListWidth - img_width * 5);
+    imageListPosition = -(prev * img_width);
+    if (imageListPosition > -imageListWidth && imageListPosition < -imageListWidth + img_width*5) {
+      imageListPosition = -imageListWidth + img_width*5
+      $imageList.style.left = imageListPosition + "px";
     }
-    $imageList.style.left = imageListPosition + "px";
+    if (imageListPosition > -imageListWidth + img_width*5){
+      $imageList.style.left = imageListPosition + "px";
+    }
   });
   $rightSmallArrow.addEventListener("click", () => {
     imageListPosition = imageListPosition - img_width;
@@ -107,14 +101,11 @@ function createList(images) {
   }
   function activeImage(index, list) {
     $slider.style.backgroundImage = list[index].style.backgroundImage;
-    
     list[index].classList.add("active");
-    if (prev >= 0 && prev != index) {
+    if ((prev >= 0 && prev != index)) {
       list[prev].classList.remove("active");
     }
-    console.log(prev);
     prev = index;
-    console.log(prev);
   }
 }
 
